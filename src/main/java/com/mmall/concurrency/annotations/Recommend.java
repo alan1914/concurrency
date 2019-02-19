@@ -1,4 +1,4 @@
-package com.mmall.concurrency.annoations;
+package com.mmall.concurrency.annotations;
 
 
 import java.lang.annotation.ElementType;
