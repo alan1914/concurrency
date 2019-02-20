@@ -1,4 +1,4 @@
-package com.mmall.concurrency;
+package com.mmall.concurrency.example.count;
 
 import com.mmall.concurrency.annotations.NotThreadSafe;
 import lombok.extern.slf4j.Slf4j;
@@ -8,10 +8,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
-@NotThreadSafe
+/**
+ * @author stone
+ * @des TODO
+ * @date 2019/2/19/019 11:53
+ **/
 @Slf4j
-public class ConcurrencyTest {
-
+@NotThreadSafe
+public class CountExample1 {
 
     // 请求总数
     private static int clientTotal = 5000;
@@ -46,6 +50,5 @@ public class ConcurrencyTest {
         executorService.shutdown();
         log.info("count{}", count);
     }
-
 
 }

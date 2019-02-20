@@ -1,17 +1,22 @@
-package com.mmall.concurrency;
+package com.mmall.concurrency.example.atomic;
 
-import com.mmall.concurrency.annotations.NotThreadSafe;
+import com.mmall.concurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.LongAdder;
 
-@NotThreadSafe
+/**
+ * @author stone
+ * @des LongAdder
+ * @date 2019/2/19/019 11:53
+ **/
 @Slf4j
-public class ConcurrencyTest {
-
+@ThreadSafe
+public class AtomicExample3 {
 
     // 请求总数
     private static int clientTotal = 5000;
@@ -19,10 +24,11 @@ public class ConcurrencyTest {
     // 同时并发执行的线程总数
     private static int threadTotal = 200;
 
-    public static int count = 0;
+    public static LongAdder count = new LongAdder();
 
     private static void add() {
-        count++;
+        count.increment();
+        // count.getAndIncrement();
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -36,7 +42,7 @@ public class ConcurrencyTest {
                     add();
                     semaphore.release();
                 } catch (InterruptedException e) {
-                    log.error("exception",e);
+                    log.error("exception", e);
 
                 }
                 countDownLatch.countDown();
@@ -44,8 +50,8 @@ public class ConcurrencyTest {
         }
         countDownLatch.await();
         executorService.shutdown();
-        log.info("count{}", count);
+        log.info("count {}", count);
     }
 
-
 }
+
