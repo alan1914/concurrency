@@ -1,4 +1,4 @@
-package com.mmall.concurrency.example.count;
+package com.mmall.concurrency.example.lock;
 
 import com.mmall.concurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
@@ -7,16 +7,17 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author stone
- * @des synchronized
+ * @des Lock
  * @date 2019/2/19/019 11:53
  **/
 @Slf4j
 @ThreadSafe
-public class CountExample3 {
+public class LockExample2 {
 
     // 请求总数
     private static int clientTotal = 50000;
@@ -26,9 +27,7 @@ public class CountExample3 {
 
     public static int count = 0;
 
-    private synchronized static void add() {
-        count++;
-    }
+    private final static Lock lock = new ReentrantLock();
 
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -49,6 +48,15 @@ public class CountExample3 {
         countDownLatch.await();
         executorService.shutdown();
         log.info("count {}", count);
+    }
+
+    private static void add() {
+        lock.lock();
+        try {
+            count++;
+        }finally {
+            lock.unlock();
+        }
     }
 
 }

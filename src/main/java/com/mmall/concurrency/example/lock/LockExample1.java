@@ -1,4 +1,4 @@
-package com.mmall.concurrency.example.count;
+package com.mmall.concurrency.example.lock;
 
 import com.mmall.concurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author stone
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  **/
 @Slf4j
 @ThreadSafe
-public class CountExample3 {
+public class LockExample1 {
 
     // 请求总数
     private static int clientTotal = 50000;
@@ -50,5 +51,4 @@ public class CountExample3 {
         executorService.shutdown();
         log.info("count {}", count);
     }
-
 }

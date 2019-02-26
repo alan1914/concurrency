@@ -1,4 +1,4 @@
-package com.mmall.concurrency.example.count;
+package com.mmall.concurrency.example.lock;
 
 import com.mmall.concurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
@@ -7,28 +7,28 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.StampedLock;
 
 /**
  * @author stone
- * @des synchronized
+ * @des StampedLock
  * @date 2019/2/19/019 11:53
  **/
 @Slf4j
 @ThreadSafe
-public class CountExample3 {
+public class LockExample5 {
 
     // 请求总数
-    private static int clientTotal = 50000;
+    private static int clientTotal = 5000;
 
     // 同时并发执行的线程总数
     private static int threadTotal = 200;
 
     public static int count = 0;
 
-    private synchronized static void add() {
-        count++;
-    }
+    private final static StampedLock lock = new StampedLock();
 
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -41,7 +41,7 @@ public class CountExample3 {
                     add();
                     semaphore.release();
                 } catch (InterruptedException e) {
-                    log.error("exception",e);
+                    log.error("exception", e);
                 }
                 countDownLatch.countDown();
             });
@@ -49,6 +49,15 @@ public class CountExample3 {
         countDownLatch.await();
         executorService.shutdown();
         log.info("count {}", count);
+    }
+
+    private static void add() {
+        long stamp = lock.writeLock();
+        try {
+            count++;
+        } finally {
+            lock.unlock(stamp);
+        }
     }
 
 }
